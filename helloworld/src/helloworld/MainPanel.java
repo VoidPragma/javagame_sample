@@ -5,14 +5,12 @@ import javax.swing.*;
 
 public class MainPanel extends JPanel implements Runnable {
 	//パネルサイズ
-	private static final int WIDTH = 240;
-	private static final int HEIGHT = 240;
-	//ボールの大きさ、位置、速度
-	private static final int SIZE = 10;
-	private int x;
-	private int y;
-	private int vx;
-	private int vy;
+	public static final int WIDTH = 240;
+	public static final int HEIGHT = 240;
+	//ボールの数
+	private static final int NUM_BALL = 6;
+	//ボール格納配列
+	private Ball[] ball;
 	//アニメーション用スレッド
 	private Thread thread;
 	
@@ -20,10 +18,14 @@ public class MainPanel extends JPanel implements Runnable {
 		//パネルの推奨サイズを設定、pack()する時に必要
 		setPreferredSize(new Dimension(WIDTH,HEIGHT));
 		//変数などの初期化
-		x = 100;
-		y = 100;
-		vx = 3;
-		vy = 1;
+		ball = new Ball[NUM_BALL];
+		//ボール作成
+		ball[0] = new Ball(0,0,1,2);
+		ball[1] = new Ball(10, 10, 3, -2);
+	    ball[2] = new Ball(50, 0, -2, 3);
+	    ball[3] = new Ball(0, 0, 12, 8);
+	    ball[4] = new Ball(100,40,-1,5);
+	    ball[5] = new Ball(230,10,2,1);
 		
 		//スレッド起動
 		thread = new Thread(this);
@@ -34,28 +36,20 @@ public class MainPanel extends JPanel implements Runnable {
 		super.paintComponent(g);
 		
 		//盤面を描いたり、フィールドを描いたりする
-		g.setColor(Color.BLUE);
-		g.fillOval(x, y, SIZE, SIZE);
+		for(int i = 0; i < NUM_BALL; i++){
+			ball[i].draw(g);
+		}
 	}
-	
 	//メインループ
 	
 	public void run(){
 		//プログラムが終了するまでフレーム処理を繰り返す
 		while(true){
 			
-		    // 左または右に当たったらx方向速度の符号を反転させる
-		    if (x < 0 || x > WIDTH - SIZE) {
-		        vx = -vx;
+		    for(int i = 0; i< NUM_BALL; i++){
+		    	ball[i].move();
 		    }
 		    
-		    // 上または下に当たったらy方向速度の符号を反転させる
-		    if (y < 0 || y > HEIGHT - SIZE) {
-		        vy = -vy;
-		    }
-
-			x += vx;
-			y += vy;
 			
 			//再描写
 			repaint();
