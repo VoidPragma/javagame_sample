@@ -22,7 +22,7 @@ public class MainPanel extends JPanel implements Runnable {
 		//変数などの初期化
 		x = 100;
 		y = 100;
-		vx = 1;
+		vx = 3;
 		vy = 1;
 		
 		//スレッド起動
@@ -35,7 +35,7 @@ public class MainPanel extends JPanel implements Runnable {
 		
 		//盤面を描いたり、フィールドを描いたりする
 		g.setColor(Color.BLUE);
-		g.fillOval(x - SIZE, y - SIZE, SIZE, SIZE);
+		g.fillOval(x, y, SIZE, SIZE);
 	}
 	
 	//メインループ
@@ -43,6 +43,17 @@ public class MainPanel extends JPanel implements Runnable {
 	public void run(){
 		//プログラムが終了するまでフレーム処理を繰り返す
 		while(true){
+			
+		    // 左または右に当たったらx方向速度の符号を反転させる
+		    if (x < 0 || x > WIDTH - SIZE) {
+		        vx = -vx;
+		    }
+		    
+		    // 上または下に当たったらy方向速度の符号を反転させる
+		    if (y < 0 || y > HEIGHT - SIZE) {
+		        vy = -vy;
+		    }
+
 			x += vx;
 			y += vy;
 			
